@@ -43,7 +43,7 @@ let skincareSos=[
 
 let lss=[
     {
-        "title": "Caudalie Vinergetic Instant Detox Mask",
+        "title": "Caudalie Vinergetic Mask",
         "avatar": "https://images-static.nykaa.com/media/catalog/product/tr:h-800,w-800,cm-pad_resize/c/8/c8af0743522931003525_1.jpg",
         "price": "958.00",
         "qty": "75 ml",
@@ -51,7 +51,7 @@ let lss=[
         "id": "1"
     },
     {
-        "title": "Bobbi Brown Skin Full Cover Concealer Mini",
+        "title": "Bobbi Brown Skin Cover",
         "avatar": "https://images-static.nykaa.com/media/catalog/product/tr:h-800,w-800,cm-pad_resize/0/a/0a30390716170295640_0.jpg",
         "price": "54.00",
         "qty": "2 ml",
@@ -59,7 +59,7 @@ let lss=[
         "id": "2"
     },
     {
-        "title": "Murad Rapid Dark Spot Correcting Serum",
+        "title": "Murad Dark Spot Serum",
         "avatar": "https://images-static.nykaa.com/media/catalog/product/tr:h-800,w-800,cm-pad_resize/5/d/5df0988767332153636_1.jpg",
         "price": "238.00",
         "qty": "10 ml",
@@ -67,7 +67,7 @@ let lss=[
         "id": "3"
     },
     {
-        "title": "L'Occitane Immortelle Precious Emulsion",
+        "title": "L'Occitane Precious Emulsion",
         "avatar": "https://images-static.nykaa.com/media/catalog/product/tr:h-800,w-800,cm-pad_resize/5/6/560d90327SE075I22.jpg",
         "price": "974.00",
         "qty": "100 ml",
@@ -75,7 +75,7 @@ let lss=[
         "id": "4"
     },
     {
-        "title": "Gucci Bloom Eau De Toilette",
+        "title": "Gucci Bloom",
         "avatar": "https://images-static.nykaa.com/media/catalog/product/tr:h-800,w-800,cm-pad_resize/b/a/ba776303616302514298_1.jpg",
         "price": "262.00",
         "qty": "90 ml",
@@ -215,7 +215,7 @@ let fmh=[{
     "id": "21"
 }
 ];
-
+let masterArr=[...lss,...kc,...fmh];
 
 
 
@@ -233,10 +233,10 @@ function offerFlash(){
     let i=0;
     setInterval(() => {
         if(i==0){
-            document.querySelector("#leftDiv>h4").innerText="BEAUTY BONANZA Get Your Daily Dose of Amazing Deals";
+            document.querySelector("#leftDiv>h4>a").innerText="BEAUTY BONANZA Get Your Daily Dose of Amazing Deals";
         }
         if(i==1){
-            document.querySelector("#leftDiv>h4").innerText="";
+            document.querySelector("#leftDiv>h4>a").innerText="";
         }
         i++;
         if (i==2) {
@@ -313,8 +313,28 @@ function slideData(arr,x,y,idname,imgcont,bn,bp,stop){
         rating.innerText=elem.rating;
         let qty=document.createElement("p");
         qty.innerText=elem.qty;
+        let cartbtn=document.createElement("button");
+        cartbtn.setAttribute("class","cartbtn");
+        cartbtn.innerText="Add To Cart";
+        cartbtn.addEventListener("click",function(){
+            let cartData=JSON.parse(localStorage.getItem("cart"))||[];
+            let Flag="No";
+              for(let i=0; i<=cartData.length-1; i++){
+                if(elem.id==cartData[i].id){
+                  Flag="Yes";
+                  break;
+                }
+              }
+            if(Flag=="Yes"){
+                alert("Product already in cart");
+            } else{
+                cartData.push(elem);
+                localStorage.setItem("cart",JSON.stringify(cartData));
+                alert("Product added to cart");
+            }
+        })
 
-        div.append(pic,title,price,rating,qty);
+        div.append(pic,title,price,rating,qty,cartbtn);
         document.querySelector(imgcont).append(div);
     })
     let a=document.querySelector(imgcont);
@@ -347,6 +367,26 @@ function slideData(arr,x,y,idname,imgcont,bn,bp,stop){
 //         botnav.style.display="none";
 //     })
 // }
+
+document.querySelector("#search").addEventListener("input",function(){
+    let searchvalue=document.querySelector("#search").value;
+    if(searchvalue==""){
+        document.querySelector("#inpcontent").innerHTML="";
+    }else{
+        let searchdata=masterArr.filter((elem,index)=>{
+            return elem.title.toLowerCase().includes(searchvalue.toLowerCase());
+        })
+        document.querySelector("#inpcontent").innerHTML="";
+        for(let i=0; i<=searchdata.length-1; i++){
+            let rec=document.createElement("a");
+            rec.innerText=searchdata[i].title;
+            rec.style.textDecoration="none";
+            rec.style.color="black";
+            rec.setAttribute("href","./SignIn.html");
+            document.querySelector("#inpcontent").append(rec);
+        }
+    }
+})
 
 
    
